@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RedBlue\'s Blog</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_categorie">Categorie</string>
+    <string name="nav_contatti">Contatti</string>
 </resources>
