@@ -1,5 +1,7 @@
 package it.redblue.redbluesblogapp.model;
 
+import android.databinding.ObservableField;
+
 import com.google.gson.annotations.SerializedName;
 
 /**

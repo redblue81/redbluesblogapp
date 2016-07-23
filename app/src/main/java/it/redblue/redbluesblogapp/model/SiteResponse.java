@@ -1,5 +1,7 @@
 package it.redblue.redbluesblogapp.model;
 
+import android.databinding.ObservableArrayList;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -16,7 +18,8 @@ public class SiteResponse {
     @SerializedName("pages")
     private int pages;
     @SerializedName("posts")
-    private List<WordpressPost> posts;
+    //private List<WordpressPost> posts;
+    private ObservableArrayList<WordpressPost> posts;
 
     public int getCount() {
         return count;
@@ -42,12 +45,11 @@ public class SiteResponse {
         this.pages = pages;
     }
 
-    public List<WordpressPost> getPosts() {
+    public ObservableArrayList<WordpressPost> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<WordpressPost> posts) {
+    public void setPosts(ObservableArrayList<WordpressPost> posts) {
         this.posts = posts;
     }
-
 }

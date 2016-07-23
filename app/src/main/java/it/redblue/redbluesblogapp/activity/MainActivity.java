@@ -1,5 +1,7 @@
 package it.redblue.redbluesblogapp.activity;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ObservableArrayList;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,10 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.adapter.WordpressAdapter;
+import it.redblue.redbluesblogapp.databinding.ActivityMainBinding;
+import it.redblue.redbluesblogapp.listeners.EndlessScrollingListener;
 import it.redblue.redbluesblogapp.model.SiteResponse;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 import it.redblue.redbluesblogapp.webservice.ApiClient;
@@ -30,10 +36,15 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
 
+    private WordpressAdapter adapter;
+    //private List<WordpressPost> postList;
+    private ObservableArrayList<WordpressPost> postList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        ActivityMainBinding activityMain = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,15 +74,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
                 int statusCode = response.code();
-                List<WordpressPost> postList = response.body().getPosts();
+                postList = response.body().getPosts();
                 Log.d(TAG, "Post ricevuti correttamente");
                 //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
-                recyclerView.setAdapter(new WordpressAdapter(postList, getApplicationContext()));
+                adapter = new WordpressAdapter(postList, getApplicationContext());
+                recyclerView.setAdapter(adapter);
+                recyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                    @Override
+                    public void onLoadMore(int page, int count) {
+                        loadMorePosts(page, postList.size());
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<SiteResponse> call, Throwable t) {
-                Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Errore primo caricamento post - " + t.toString());
+            }
+        });
+
+    }
+
+    public void loadMorePosts(int page, int count) {
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<SiteResponse> call = apiService.getPosts(page);
+        call.enqueue(new Callback<SiteResponse>() {
+            @Override
+            public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                List<WordpressPost> morePosts = response.body().getPosts();
+                postList.addAll(morePosts);
+                Log.d(TAG, "Ricevuti altri 10 post - Totale: " + postList.size());
+                adapter.notifyItemRangeInserted(adapter.getItemCount(), postList.size() - 1);
+            }
+
+            @Override
+            public void onFailure(Call<SiteResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Errore caricamento in seguito a scrolling - " + t.toString());
             }
         });
     }

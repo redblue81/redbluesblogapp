@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
+import it.redblue.redbluesblogapp.databinding.ProgressBarBinding;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
 /**
@@ -78,6 +80,15 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
         PostItemBinding binding;
 
         public PostItemViewHolder(View view) {
+            super(view);
+            binding = DataBindingUtil.bind(view);
+        }
+    }
+
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBarBinding binding;
+
+        public LoadingViewHolder(View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
         }
