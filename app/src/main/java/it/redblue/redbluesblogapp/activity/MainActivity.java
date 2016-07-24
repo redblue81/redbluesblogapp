@@ -2,6 +2,7 @@ package it.redblue.redbluesblogapp.activity;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,14 +38,17 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
 
     private WordpressAdapter adapter;
-    //private List<WordpressPost> postList;
-    private ObservableArrayList<WordpressPost> postList;
+    private List<WordpressPost> postList;
+    private ObservableArrayList<WordpressPost> posts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        ActivityMainBinding activityMain = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        posts = new ObservableArrayList<>();
+        binding.setPosts(posts);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
                 int statusCode = response.code();
                 postList = response.body().getPosts();
+                posts.addAll(postList);
                 Log.d(TAG, "Post ricevuti correttamente");
                 //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
                 adapter = new WordpressAdapter(postList, getApplicationContext());

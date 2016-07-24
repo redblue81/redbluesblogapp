@@ -18,8 +18,7 @@ public class SiteResponse {
     @SerializedName("pages")
     private int pages;
     @SerializedName("posts")
-    //private List<WordpressPost> posts;
-    private ObservableArrayList<WordpressPost> posts;
+    private List<WordpressPost> posts;
 
     public int getCount() {
         return count;
@@ -45,11 +44,12 @@ public class SiteResponse {
         this.pages = pages;
     }
 
-    public ObservableArrayList<WordpressPost> getPosts() {
+    public List<WordpressPost> getPosts() {
         return posts;
     }
 
-    public void setPosts(ObservableArrayList<WordpressPost> posts) {
+    public void setPosts(List<WordpressPost> posts) {
         this.posts = posts;
     }
+
 }

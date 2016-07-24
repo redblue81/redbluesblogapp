@@ -3,6 +3,7 @@ package it.redblue.redbluesblogapp.adapter;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.databinding.tool.util.L;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,6 @@ import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
-import it.redblue.redbluesblogapp.databinding.ProgressBarBinding;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
 /**
@@ -80,15 +80,6 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
         PostItemBinding binding;
 
         public PostItemViewHolder(View view) {
-            super(view);
-            binding = DataBindingUtil.bind(view);
-        }
-    }
-
-    public class LoadingViewHolder extends RecyclerView.ViewHolder {
-        ProgressBarBinding binding;
-
-        public LoadingViewHolder(View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
         }
