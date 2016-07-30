@@ -1,6 +1,8 @@
 package it.redblue.redbluesblogapp.model;
 
 import android.databinding.ObservableField;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -66,6 +68,10 @@ public class WordpressPost {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public void onClick(View view) {
+        Snackbar.make(view,getTitle(), Snackbar.LENGTH_LONG).show();
     }
 
 }
