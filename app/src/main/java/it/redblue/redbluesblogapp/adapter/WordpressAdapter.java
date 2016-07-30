@@ -24,7 +24,6 @@ import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
-import it.redblue.redbluesblogapp.databinding.ProgressBarBinding;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
 /**
