@@ -3,6 +3,7 @@ package it.redblue.redbluesblogapp.adapter;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.databinding.tool.util.L;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
+import it.redblue.redbluesblogapp.databinding.ProgressBarBinding;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
 /**
@@ -50,12 +52,10 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
         WordpressPost post = posts.get(position);
         holder.binding.setPost(post);
     }
-
     @Override
     public int getItemCount() {
         return posts.size();
     }
-
     @BindingAdapter("bind:htmlBinder")
     public static void toHtml(TextView view, String string) {
         view.setText(Html.fromHtml(string));

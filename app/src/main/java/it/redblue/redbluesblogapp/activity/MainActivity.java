@@ -32,26 +32,27 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private RecyclerView recyclerView;
-    private Toolbar toolbar;
+    private static final String TAG = MainActivity.class.getSimpleName();;
     private DrawerLayout drawerLayout;
 
     private WordpressAdapter adapter;
     private List<WordpressPost> postList;
     private ObservableArrayList<WordpressPost> posts;
+    private ObservableBoolean loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        final ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         posts = new ObservableArrayList<>();
         binding.setPosts(posts);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        loading = new ObservableBoolean();
+        binding.setLoading(loading);
+        binding.progressBarPosts.bringToFront();
+
+        setSupportActionBar(binding.toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -61,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
-        recyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.menuNavigazione);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        binding.menuNavigazione.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 return false;
@@ -83,10 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Post ricevuti correttamente");
                 //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
                 adapter = new WordpressAdapter(postList, getApplicationContext());
-                recyclerView.setAdapter(adapter);
-                recyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                binding.postsRecyclerView.setAdapter(adapter);
+                binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
                     @Override
                     public void onLoadMore(int page, int count) {
+                        loading.set(true);
                         loadMorePosts(page, postList.size());
                     }
                 });
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
                 List<WordpressPost> morePosts = response.body().getPosts();
                 postList.addAll(morePosts);
+                loading.set(false);
                 Log.d(TAG, "Ricevuti altri 10 post - Totale: " + postList.size());
                 adapter.notifyItemRangeInserted(adapter.getItemCount(), postList.size() - 1);
             }

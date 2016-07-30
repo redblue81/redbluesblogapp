@@ -6,6 +6,8 @@
         <import type="android.view.View" />
         <import type="it.redblue.redbluesblogapp.model.WordpressPost" />
         <variable name="posts" type="ObservableArrayList&lt;WordpressPost>" />
+        <import type="android.databinding.ObservableBoolean" />
+        <variable name="loading" type="android.databinding.ObservableBoolean" />
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -48,8 +50,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
             <!-- android:paddingTop="?android:attr/actionBarSize" -->
+
+            <ProgressBar
+                android:id="@+id/progressBarPosts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorWhite"
+                android:visibility="@{loading.get() ? View.VISIBLE : View.GONE}" />
 
         </android.support.design.widget.CoordinatorLayout>
 
