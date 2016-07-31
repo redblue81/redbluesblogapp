@@ -1,12 +1,14 @@
 package it.redblue.redbluesblogapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
 import android.databinding.ViewDataBinding;
 import android.databinding.tool.util.L;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
+import it.redblue.redbluesblogapp.activity.PostDetailActivity;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
@@ -33,6 +36,7 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
 
     private List<WordpressPost> posts;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public WordpressAdapter(List<WordpressPost> posts, Context context) {
         this.posts = posts;
@@ -50,11 +54,25 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
     public void onBindViewHolder(PostItemViewHolder holder, int position) {
         WordpressPost post = posts.get(position);
         holder.binding.setPost(post);
+        holder.binding.getRoot().setOnClickListener(v -> {
+            if (onItemClickListener != null)
+                onItemClickListener.onItemClick(position, post);
+        });
     }
+
     @Override
     public int getItemCount() {
         return posts.size();
     }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, WordpressPost item);
+    }
+
     @BindingAdapter("bind:htmlBinder")
     public static void toHtml(TextView view, String string) {
         view.setText(Html.fromHtml(string));

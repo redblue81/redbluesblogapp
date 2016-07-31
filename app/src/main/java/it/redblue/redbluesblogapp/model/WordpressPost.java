@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class WordpressPost {
 
+    @SerializedName("id")
+    private long id;
     @SerializedName("title")
     private String title;
     @SerializedName("slug")
@@ -23,11 +25,20 @@ public class WordpressPost {
     private String data;
 
     public WordpressPost(String title, String slug, String url, String excerpt, String data) {
+        this.id = id;
         this.title = title;
         this.slug = slug;
         this.url = url;
         this.excerpt = excerpt;
         this.data = data;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -68,10 +79,6 @@ public class WordpressPost {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public void onClick(View view) {
-        Snackbar.make(view,getTitle(), Snackbar.LENGTH_LONG).show();
     }
 
 }

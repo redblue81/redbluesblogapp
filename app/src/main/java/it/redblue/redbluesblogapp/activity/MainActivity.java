@@ -1,9 +1,11 @@
 package it.redblue.redbluesblogapp.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -12,10 +14,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.redblue.redbluesblogapp.R;
@@ -32,7 +36,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();;
+    private static final String TAG = MainActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
 
     private WordpressAdapter adapter;
@@ -82,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Post ricevuti correttamente");
                 //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
                 adapter = new WordpressAdapter(postList, getApplicationContext());
+                adapter.setOnItemClickListener((position, item) -> {
+                            Intent intent = new Intent(getApplicationContext(), PostDetailActivity.class);
+                            intent.putExtra("postId", item.getId());
+                            startActivity(intent);
+                            //Snackbar.make(binding.postsRecyclerView, Html.fromHtml(item.getTitle()), Snackbar.LENGTH_SHORT).show()
+                        }
+                );
                 binding.postsRecyclerView.setAdapter(adapter);
                 binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
                     @Override

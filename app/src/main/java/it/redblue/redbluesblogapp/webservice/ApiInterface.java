@@ -19,4 +19,7 @@ public interface ApiInterface {
     @GET("get_posts/?count=" + POSTS_NUMBER + PARAMETERS)
     Call<SiteResponse> getPosts(@Query("page") int page);
 
+    @GET("get_post")
+    Call<SiteResponse> getPost(@Query("id") long id);
+
 }

@@ -19,6 +19,8 @@ public class SiteResponse {
     private int pages;
     @SerializedName("posts")
     private List<WordpressPost> posts;
+    @SerializedName("post")
+    private WordpressPost post;
 
     public int getCount() {
         return count;
@@ -52,4 +54,11 @@ public class SiteResponse {
         this.posts = posts;
     }
 
+    public WordpressPost getPost() {
+        return post;
+    }
+
+    public void setPost(WordpressPost post) {
+        this.post = post;
+    }
 }
