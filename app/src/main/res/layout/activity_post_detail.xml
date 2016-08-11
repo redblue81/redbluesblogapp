@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="it.redblue.redbluesblogapp.activity.PostDetailActivity">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable name="post" type="it.redblue.redbluesblogapp.model.WordpressPost" />
     </data>
 
@@ -23,20 +23,21 @@
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                bind:contentScrim="?attr/colorPrimary"
+                bind:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
+                    android:id="@+id/post_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
+                    bind:src="@{post.customFields.imageUrl[0]}" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/post_image_shadow"/>
-<!--
+
                 <TextView
                     android:id="@+id/subtitle"
                     android:layout_width="match_parent"
@@ -45,21 +46,27 @@
                     android:layout_marginBottom="30dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:textSize="18sp"
-                    app:layout_scrollFlags="scroll" />
--->
+                    android:visibility="@{post.author.name == null ? View.GONE : View.VISIBLE}"
+                    bind:subtitle="@{@string/subtitle(post.author.name, post.data)}"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    bind:layout_scrollFlags="scroll" />
+
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:layout_scrollFlags="scroll|enterAlways">
+                    bind:layout_collapseMode="pin"
+                    bind:layout_scrollFlags="scroll|enterAlways">
 
                     <TextView
                         android:id="@+id/toolbar_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="14.8sp"
+                        android:textStyle="bold"
+                        android:maxLines="3"
+                        bind:htmlBinder="@{post.title}"
                         tools:text="Testo"/>
 
                 </android.support.v7.widget.Toolbar>
@@ -73,20 +80,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            bind:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <WebView
                 android:id="@+id/web_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                bind:loadData="@{post.content}" />
+
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:layout_anchor="@id/app_bar_layout"
-            app:layout_anchorGravity="bottom|right|end" />
+            bind:layout_anchor="@id/app_bar_layout"
+            bind:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

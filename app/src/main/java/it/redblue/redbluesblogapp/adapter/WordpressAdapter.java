@@ -73,26 +73,6 @@ public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.Post
         void onItemClick(int position, WordpressPost item);
     }
 
-    @BindingAdapter("bind:htmlBinder")
-    public static void toHtml(TextView view, String string) {
-        view.setText(Html.fromHtml(string));
-    }
-
-    @BindingAdapter("bind:dataBinder")
-    public static void toItalianDate(TextView view, String string) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date postDate = null;
-        String postDateString = null;
-        try {
-            postDate = df.parse(string);
-            postDateString = dateFormat.format(postDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        view.setText(postDateString != null ? postDateString : "");
-    }
-
     public class PostItemViewHolder extends RecyclerView.ViewHolder {
         PostItemBinding binding;
 

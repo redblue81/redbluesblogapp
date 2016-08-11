@@ -15,6 +15,8 @@ public class WordpressPost {
     private long id;
     @SerializedName("title")
     private String title;
+    @SerializedName("author")
+    private Author author;
     @SerializedName("slug")
     private String slug;
     @SerializedName("url")
@@ -23,14 +25,21 @@ public class WordpressPost {
     private String excerpt;
     @SerializedName("date")
     private String data;
+    @SerializedName("content")
+    private String content;
+    @SerializedName("custom_fields")
+    private CustomFields customFields;
 
-    public WordpressPost(String title, String slug, String url, String excerpt, String data) {
+    public WordpressPost(long id, String title, Author author, String slug, String url, String excerpt, String data, String content, CustomFields customFields) {
         this.id = id;
         this.title = title;
+        this.author = author;
         this.slug = slug;
         this.url = url;
         this.excerpt = excerpt;
         this.data = data;
+        this.content = content;
+        this.customFields = customFields;
     }
 
     public long getId() {
@@ -47,6 +56,14 @@ public class WordpressPost {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public String getSlug() {
@@ -81,4 +98,19 @@ public class WordpressPost {
         this.data = data;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public CustomFields getCustomFields() {
+        return customFields;
+    }
+
+    public void setCustomFields(CustomFields customFields) {
+        this.customFields = customFields;
+    }
 }

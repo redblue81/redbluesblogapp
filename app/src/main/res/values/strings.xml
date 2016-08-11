@@ -4,4 +4,6 @@
     <string name="nav_home">Home</string>
     <string name="nav_categorie">Categorie</string>
     <string name="nav_contatti">Contatti</string>
+
+    <string name="subtitle" >Scritto da %1$s - %2$s</string>
 </resources>
