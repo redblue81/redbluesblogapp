@@ -53,7 +53,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 binding.setPost(post);
                 binding.toolbarText.setText(Html.fromHtml(post.getTitle()));
                 binding.subtitle.setText(post.getAuthor().getName() + " - " + post.getData());
-                if (post.getCustomFields().getImageUrl()[0] != null && !"".equals(post.getCustomFields().getImageUrl()[0])) {
+                if (post.getCustomFields().getImageUrl() != null && !"".equals(post.getCustomFields().getImageUrl()[0])) {
                     Picasso.with(getApplicationContext()).load(post.getCustomFields().getImageUrl()[0]).into(binding.postImage);
                 }
                 binding.webView.getSettings().setJavaScriptEnabled(true);
