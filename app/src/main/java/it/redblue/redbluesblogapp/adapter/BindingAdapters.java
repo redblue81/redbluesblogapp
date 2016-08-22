@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 import android.text.Html;
 import android.text.Spanned;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import it.redblue.redbluesblogapp.R;
+import it.redblue.redbluesblogapp.util.Utilities;
 
 /**
  * Created by redblue on 11/08/16.
@@ -55,26 +57,46 @@ public class BindingAdapters {
     @BindingAdapter("bind:subtitle")
     public static void subTitleText(TextView view, String string) {
         String author = string.substring(0, string.indexOf('-') - 1);
-        String data = string.substring(string.indexOf('-') + 1);
+        String data = string.substring(string.indexOf('-') + 2);
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date postDate = null;
         String postDateString = null;
-        try {
-            postDate = df.parse(data);
-            postDateString = dateFormat.format(postDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (data != null && !"".equals(data)) {
+            try {
+                postDate = df.parse(data);
+                postDateString = dateFormat.format(postDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-
         view.setText(Html.fromHtml(author) + " - " + postDateString);
     }
 
     @BindingAdapter("bind:loadData")
     public static void loadData(WebView view, String string) {
         view.getSettings().setJavaScriptEnabled(true);
-        view.loadData(string, "text/html; charset=UTF-8", null);
+        // Preferisco l'applicazione diretta del CSS, per non avere l'effetto del caricamento
+        // visibile durante l'uso dell'app
+/*        view.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+
+                // Applica il css personalizzato dopo il caricamento della pagina
+                Utilities.injectCSS(view.getContext(), view);
+                super.onPageFinished(view, url);
+            }
+        });
+*/
+        if (string.length() > 0) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html><head><link href=\"style.css\" type=\"text/css\" rel=\"stylesheet\"/></head><body>");
+            sb.append(string.substring(0, string.indexOf("<div class=\"addtoany_share_save_container") - 1));
+            sb.append("</body></html>");
+            //view.loadData(string.substring(0, string.indexOf("<div class=\"addtoany_share_save_container") - 1), "text/html; charset=UTF-8", null);
+            view.loadDataWithBaseURL("file:///android_asset/", sb.toString(), "text/html", "utf-8", null);
+        }
     }
 
 }
