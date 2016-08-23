@@ -82,6 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress"
             android:visibility="@{content.get.length > 0 ? View.GONE : View.VISIBLE}" />
 
         <android.support.v4.widget.NestedScrollView

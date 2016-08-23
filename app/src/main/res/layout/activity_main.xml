@@ -43,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_centerHorizontal="true"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress"
                 android:visibility="@{posts.size > 0 ? View.GONE : View.VISIBLE}" />
 
             <android.support.v7.widget.RecyclerView
@@ -59,6 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/colorWhite"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress"
                 android:visibility="@{loading.get() ? View.VISIBLE : View.GONE}" />
 
         </android.support.design.widget.CoordinatorLayout>
