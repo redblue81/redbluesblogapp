@@ -5,5 +5,7 @@
     <string name="nav_categorie">Categorie</string>
     <string name="nav_contatti">Contatti</string>
 
-    <string name="subtitle" >Scritto da %1$s - %2$s</string>
+    <string name="subtitle">Scritto da %1$s - %2$s</string>
+
+    <string name="postCount">numero di Post: %s</string>
 </resources>

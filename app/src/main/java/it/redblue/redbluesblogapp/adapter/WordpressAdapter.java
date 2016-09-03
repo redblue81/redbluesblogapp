@@ -1,32 +1,16 @@
 package it.redblue.redbluesblogapp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableInt;
-import android.databinding.ViewDataBinding;
-import android.databinding.tool.util.L;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import it.redblue.redbluesblogapp.R;
-import it.redblue.redbluesblogapp.activity.PostDetailActivity;
 import it.redblue.redbluesblogapp.databinding.PostItemBinding;
+import it.redblue.redbluesblogapp.model.WPCategory;
 import it.redblue.redbluesblogapp.model.WordpressPost;
 
 /**
@@ -35,6 +19,7 @@ import it.redblue.redbluesblogapp.model.WordpressPost;
 public class WordpressAdapter extends RecyclerView.Adapter<WordpressAdapter.PostItemViewHolder> {
 
     private List<WordpressPost> posts;
+    private List<WPCategory> categories;
     private Context context;
     private OnItemClickListener onItemClickListener;
 

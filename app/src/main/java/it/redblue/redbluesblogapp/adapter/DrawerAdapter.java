@@ -11,6 +11,7 @@ import java.util.List;
 
 import it.redblue.redbluesblogapp.databinding.NavItemBinding;
 import it.redblue.redbluesblogapp.model.DrawerItem;
+import it.redblue.redbluesblogapp.model.WPCategory;
 
 /**
  * Created by redblue on 09/07/16.
@@ -19,6 +20,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.NavItemVie
 
     private List<DrawerItem> items;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public DrawerAdapter(List<DrawerItem> items, Context context) {
         this.items = items;
@@ -36,11 +38,23 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.NavItemVie
     public void onBindViewHolder(NavItemViewHolder holder, int position) {
         DrawerItem item = items.get(position);
         holder.binding.setItem(item);
+        holder.binding.getRoot().setOnClickListener(v -> {
+            if (onItemClickListener != null)
+                onItemClickListener.onItemClick(position, item);
+        });
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, DrawerItem item);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public class NavItemViewHolder extends RecyclerView.ViewHolder {

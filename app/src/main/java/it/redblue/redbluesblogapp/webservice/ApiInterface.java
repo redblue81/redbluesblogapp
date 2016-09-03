@@ -22,4 +22,13 @@ public interface ApiInterface {
     @GET("get_post")
     Call<SiteResponse> getPost(@Query("id") long id);
 
+    @GET("get_category_index")
+    Call<SiteResponse> getCategories();
+
+    @GET("get_category_posts/?count=" + POSTS_NUMBER + PARAMETERS)
+    Call<SiteResponse> getCategoryPosts(@Query("id") long id, @Query("page") int page);
+
+    @GET("redblue/get_post_excerpt")
+    Call<SiteResponse> getExcerptForPost(@Query("post_id") long id);
+
 }

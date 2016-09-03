@@ -1,10 +1,14 @@
 package it.redblue.redbluesblogapp.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.webkit.WebView;
 
 import java.io.InputStream;
+
+import it.redblue.redbluesblogapp.activity.MainActivity;
 
 /**
  * Created by redblue on 11/08/16.

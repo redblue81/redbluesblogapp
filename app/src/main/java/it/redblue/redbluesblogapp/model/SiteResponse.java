@@ -21,6 +21,10 @@ public class SiteResponse {
     private List<WordpressPost> posts;
     @SerializedName("post")
     private WordpressPost post;
+    @SerializedName("categories")
+    private List<WPCategory> categories;
+    @SerializedName("excerpt")
+    private String excerpt;
 
     public int getCount() {
         return count;
@@ -60,5 +64,21 @@ public class SiteResponse {
 
     public void setPost(WordpressPost post) {
         this.post = post;
+    }
+
+    public List<WPCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<WPCategory> categories) {
+        this.categories = categories;
+    }
+
+    public String getExcerpt() {
+        return excerpt;
+    }
+
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
     }
 }

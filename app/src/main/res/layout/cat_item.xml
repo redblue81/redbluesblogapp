@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto" >
+
     <data>
-        <variable name="post" type="it.redblue.redbluesblogapp.model.WordpressPost" />
+        <variable name="category" type="it.redblue.redbluesblogapp.model.WPCategory" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -10,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="8dp">
+
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
@@ -25,28 +27,16 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp"
-                bind:htmlBinder="@{post.title}" />
-
+                bind:htmlBinder="@{category.title}" />
 
             <TextView
-                android:id="@+id/data"
+                android:id="@+id/postCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="16dp"
+                android:textAlignment="center"
                 android:layout_below="@id/title"
                 android:textColor="@color/colorGreyLight"
-                bind:dataBinder="@{post.data}"/>
-
-            <TextView
-                android:id="@+id/excerpt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:paddingRight="16dp"
-                android:layout_below="@id/data"
-                android:textColor="@color/colorGreyLight"
-                bind:htmlBinder="@{post.excerpt}" />
-
+                android:text="@{@string/postCount(category.postCount)}" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
