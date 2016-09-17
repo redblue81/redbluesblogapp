@@ -11,7 +11,8 @@ import retrofit2.http.Query;
 public interface ApiInterface {
 
     int POSTS_NUMBER = 10;
-    String PARAMETERS = "&exclude=content,title_plain,tags,custom_fields,categories,comments&author_meta=email";
+    //String PARAMETERS = "&exclude=content,title_plain,tags,custom_fields,categories,comments&author_meta=email";
+    String PARAMETERS = "&exclude=content,title_plain,tags,categories,comments&author_meta=email";
 
     @GET("get_recent_posts/?count=" + POSTS_NUMBER + PARAMETERS)
     Call<SiteResponse> getRecentPost();
