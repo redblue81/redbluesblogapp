@@ -8,6 +8,7 @@
         <variable name="posts" type="ObservableArrayList&lt;WordpressPost>" />
         <import type="android.databinding.ObservableBoolean" />
         <variable name="loading" type="android.databinding.ObservableBoolean" />
+        <variable name="error" type="android.databinding.ObservableBoolean" />
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -45,7 +46,16 @@
                 android:layout_centerHorizontal="true"
                 android:indeterminate="true"
                 android:indeterminateDrawable="@drawable/progress"
-                android:visibility="@{posts.size > 0 ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{posts.size &gt; 0 || error.get() ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:id="@+id/errorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="Errore nel caricamento dei dati"
+                android:visibility="@{error.get() ? View.VISIBLE : View.GONE}"/>
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
@@ -56,7 +66,8 @@
                     android:id="@+id/posts_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:visibility="@{error.get() ? View.GONE : View.VISIBLE}"/>
             </android.support.v4.widget.SwipeRefreshLayout>
             <!-- android:paddingTop="?android:attr/actionBarSize" -->
 
@@ -68,7 +79,7 @@
                 android:background="@color/colorWhite"
                 android:indeterminate="true"
                 android:indeterminateDrawable="@drawable/progress"
-                android:visibility="@{loading.get() ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{loading.get() &amp;&amp; !error.get() ? View.VISIBLE : View.GONE}" />
 
         </android.support.design.widget.CoordinatorLayout>
 

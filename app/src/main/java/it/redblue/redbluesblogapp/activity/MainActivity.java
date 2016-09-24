@@ -1,10 +1,10 @@
 package it.redblue.redbluesblogapp.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private List<WordpressPost> postList;
     private ObservableArrayList<WordpressPost> posts;
     private ObservableBoolean loading;
+    private ObservableBoolean error;
     private long catId;
     private String excerpt;
 
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         binding.setPosts(posts);
 
         loading = new ObservableBoolean();
+        error = new ObservableBoolean();
+        binding.setError(error);
         binding.setLoading(loading);
         binding.progressBarPosts.bringToFront();
 
@@ -110,54 +113,62 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<SiteResponse>() {
             @Override
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                error.set(false);
                 int statusCode = response.code();
                 postList = response.body().getPosts();
-                posts.addAll(postList);
-                Log.d(TAG, "Post ricevuti correttamente");
-                //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
-                adapter = new WordpressAdapter(postList, getApplicationContext());
-                adapter.setOnItemClickListener((position, item) -> {
-                            Intent intent = new Intent(getApplicationContext(), PostDetailActivity.class);
-                            intent.putExtra("postId", item.getId());
-                            startActivity(intent);
-                            //Snackbar.make(binding.postsRecyclerView, Html.fromHtml(item.getTitle()), Snackbar.LENGTH_SHORT).show()
-                        }
-                );
-                if (postList.size() != 0 && catId != 0) {
-                    Iterator<WordpressPost> iter = postList.iterator();
-                    while (iter.hasNext()) {
-                        WordpressPost wp = iter.next();
-                        call = apiService.getExcerptForPost(wp.getId());
-                        call.enqueue(new Callback<SiteResponse>() {
-                            @Override
-                            public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
-                                excerpt = response.body().getExcerpt();
-                                postList.get(postList.indexOf(wp)).setExcerpt(excerpt);
-                                adapter.notifyItemChanged(postList.indexOf(wp));
-                                Log.d(TAG, "Excerpt del post '" + wp.getTitle() + "' aggiunto correttamente");
+                if (postList.size() > 0) {
+                    posts.addAll(postList);
+                    Log.d(TAG, "Post ricevuti correttamente");
+                    //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
+                    adapter = new WordpressAdapter(postList, getApplicationContext());
+                    adapter.setOnItemClickListener((position, item) -> {
+                                Intent intent = new Intent(getApplicationContext(), PostDetailActivity.class);
+                                intent.putExtra("postId", item.getId());
+                                startActivity(intent);
+                                //Snackbar.make(binding.postsRecyclerView, Html.fromHtml(item.getTitle()), Snackbar.LENGTH_SHORT).show()
                             }
+                    );
+                    if (postList.size() != 0 && catId != 0) {
+                        Iterator<WordpressPost> iter = postList.iterator();
+                        while (iter.hasNext()) {
+                            WordpressPost wp = iter.next();
+                            call = apiService.getExcerptForPost(wp.getId());
+                            call.enqueue(new Callback<SiteResponse>() {
+                                @Override
+                                public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                                    excerpt = response.body().getExcerpt();
+                                    postList.get(postList.indexOf(wp)).setExcerpt(excerpt);
+                                    adapter.notifyItemChanged(postList.indexOf(wp));
+                                    Log.d(TAG, "Excerpt del post '" + wp.getTitle() + "' aggiunto correttamente");
+                                }
 
-                            @Override
-                            public void onFailure(Call<SiteResponse> call, Throwable t) {
-                                Log.e(TAG, "ERRORE: " + t.getMessage());
-                                Log.e(TAG, "Impossibile recuperare l'excerpt del post " + postList.get(postList.indexOf(wp)).getTitle());
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<SiteResponse> call, Throwable t) {
+                                    Log.e(TAG, "ERRORE: " + t.getMessage());
+                                    Log.e(TAG, "Impossibile recuperare l'excerpt del post " + postList.get(postList.indexOf(wp)).getTitle());
+                                }
+                            });
+                        }
                     }
+                    binding.postsRecyclerView.setAdapter(adapter);
+                    binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
+                        @Override
+                        public void onLoadMore(int page, int count) {
+                            loading.set(true);
+                            loadMorePosts(page, postList.size());
+                        }
+                    });
+                } else {
+                    error.set(true);
+                    binding.errorTextView.setText("Nessun post da visualizzare");
                 }
-                binding.postsRecyclerView.setAdapter(adapter);
-                binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
-                    @Override
-                    public void onLoadMore(int page, int count) {
-                        loading.set(true);
-                        loadMorePosts(page, postList.size());
-                    }
-                });
             }
 
             @Override
             public void onFailure(Call<SiteResponse> call, Throwable t) {
+                error.set(true);
                 Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
+                binding.errorTextView.setText("Errore nel caricamento dei dati");
                 Log.e(TAG, "Errore primo caricamento post - " + t.toString());
             }
         });
@@ -175,53 +186,61 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<SiteResponse>() {
                     @Override
                     public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                        error.set(false);
                         int statusCode = response.code();
                         postList = response.body().getPosts();
-                        posts.addAll(postList);
-                        Log.d(TAG, "Post ricevuti correttamente");
-                        //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
-                        adapter = new WordpressAdapter(postList, getApplicationContext());
-                        adapter.setOnItemClickListener((position, item) -> {
-                                    Intent intent = new Intent(getApplicationContext(), PostDetailActivity.class);
-                                    intent.putExtra("postId", item.getId());
-                                    startActivity(intent);
-                                    //Snackbar.make(binding.postsRecyclerView, Html.fromHtml(item.getTitle()), Snackbar.LENGTH_SHORT).show()
-                                }
-                        );
-                        if (postList.size() != 0 && catId != 0) {
-                            Iterator<WordpressPost> iter = postList.iterator();
-                            while (iter.hasNext()) {
-                                WordpressPost wp = iter.next();
-                                call = apiService.getExcerptForPost(wp.getId());
-                                call.enqueue(new Callback<SiteResponse>() {
-                                    @Override
-                                    public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
-                                        excerpt = response.body().getExcerpt();
-                                        postList.get(postList.indexOf(wp)).setExcerpt(excerpt);
-                                        adapter.notifyItemChanged(postList.indexOf(wp));
-                                        Log.d(TAG, "Excerpt del post '" + wp.getTitle() + "' aggiunto correttamente");
+                        if (postList.size() > 0) {
+                            posts.addAll(postList);
+                            Log.d(TAG, "Post ricevuti correttamente");
+                            //recyclerView.setAdapter(new WordpressAdapter(postList, R.layout.post_item, getApplicationContext()));
+                            adapter = new WordpressAdapter(postList, getApplicationContext());
+                            adapter.setOnItemClickListener((position, item) -> {
+                                        Intent intent = new Intent(getApplicationContext(), PostDetailActivity.class);
+                                        intent.putExtra("postId", item.getId());
+                                        startActivity(intent);
+                                        //Snackbar.make(binding.postsRecyclerView, Html.fromHtml(item.getTitle()), Snackbar.LENGTH_SHORT).show()
                                     }
+                            );
+                            if (postList.size() != 0 && catId != 0) {
+                                Iterator<WordpressPost> iter = postList.iterator();
+                                while (iter.hasNext()) {
+                                    WordpressPost wp = iter.next();
+                                    call = apiService.getExcerptForPost(wp.getId());
+                                    call.enqueue(new Callback<SiteResponse>() {
+                                        @Override
+                                        public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                                            excerpt = response.body().getExcerpt();
+                                            postList.get(postList.indexOf(wp)).setExcerpt(excerpt);
+                                            adapter.notifyItemChanged(postList.indexOf(wp));
+                                            Log.d(TAG, "Excerpt del post '" + wp.getTitle() + "' aggiunto correttamente");
+                                        }
 
-                                    @Override
-                                    public void onFailure(Call<SiteResponse> call, Throwable t) {
-                                        Log.e(TAG, "ERRORE: " + t.getMessage());
-                                        Log.e(TAG, "Impossibile recuperare l'excerpt del post " + postList.get(postList.indexOf(wp)).getTitle());
-                                    }
-                                });
+                                        @Override
+                                        public void onFailure(Call<SiteResponse> call, Throwable t) {
+                                            Log.e(TAG, "ERRORE: " + t.getMessage());
+                                            Log.e(TAG, "Impossibile recuperare l'excerpt del post " + postList.get(postList.indexOf(wp)).getTitle());
+                                        }
+                                    });
+                                }
                             }
+                            binding.postsRecyclerView.setAdapter(adapter);
+                            binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
+                                @Override
+                                public void onLoadMore(int page, int count) {
+                                    loading.set(true);
+                                    loadMorePosts(page, postList.size());
+                                }
+                            });
+                        } else {
+                            error.set(true);
+                            binding.errorTextView.setText("Nessun post da visualizzare");
                         }
-                        binding.postsRecyclerView.setAdapter(adapter);
-                        binding.postsRecyclerView.addOnScrollListener(new EndlessScrollingListener((LinearLayoutManager) binding.postsRecyclerView.getLayoutManager()) {
-                            @Override
-                            public void onLoadMore(int page, int count) {
-                                loading.set(true);
-                                loadMorePosts(page, postList.size());
-                            }
-                        });
                     }
 
                     @Override
                     public void onFailure(Call<SiteResponse> call, Throwable t) {
+                        error.set(false);
+                        binding.errorTextView.setText("Errore nel caricamento dei dati");
                         Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Errore primo caricamento post - " + t.toString());
                     }
@@ -245,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<SiteResponse>() {
             @Override
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                error.set(false);
                 List<WordpressPost> morePosts = response.body().getPosts();
                 if (morePosts.size() != 0 && catId != 0) {
                     Iterator<WordpressPost> iter = morePosts.iterator();
@@ -276,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SiteResponse> call, Throwable t) {
+                error.set(true);
                 Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Errore caricamento in seguito a scrolling - " + t.toString());
             }

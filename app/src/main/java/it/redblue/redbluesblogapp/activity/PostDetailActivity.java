@@ -2,6 +2,7 @@ package it.redblue.redbluesblogapp.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +34,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private static final String TAG = PostDetailActivity.class.getSimpleName();
     private ObservableField<String> content;
+    private ObservableBoolean error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class PostDetailActivity extends AppCompatActivity {
         ActivityPostDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
 
         content = new ObservableField<>();
+        error = new ObservableBoolean();
+        binding.setError(error);
 
         setSupportActionBar(binding.toolbar);
         binding.setPost(new WordpressPost(0, "", null, "", "", "", "", "", null));
@@ -55,6 +59,7 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
                 WordpressPost post = response.body().getPost();
+                error.set(false);
                 Log.d(TAG, "Post " + post.getId() + " - " + post.getTitle() + " ricevuto correttamente");
                 binding.setPost(null);
                 binding.setPost(post);
@@ -109,6 +114,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SiteResponse> call, Throwable t) {
+                error.set(true);
+                binding.errorTextView.setText("Errore nel caricamento dei dati");
                 Log.e(TAG, "ERRORE NEL CARICAMENTO DEL POST - " + t.getMessage());
             }
         });
@@ -122,6 +129,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
                         WordpressPost post = response.body().getPost();
+                        error.set(false);
                         Log.d(TAG, "Post " + post.getId() + " - " + post.getTitle() + " ricevuto correttamente");
                         binding.setPost(null);
                         binding.setPost(post);
@@ -153,6 +161,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<SiteResponse> call, Throwable t) {
+                        error.set(true);
+                        binding.errorTextView.setText("Errore nel caricamento dei dati");
                         Log.e(TAG, "ERRORE NEL CARICAMENTO DEL POST - " + t.getMessage());
                     }
                 });

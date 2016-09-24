@@ -8,6 +8,7 @@
         <import type="android.databinding.ObservableField" />
         <variable name="post" type="it.redblue.redbluesblogapp.model.WordpressPost" />
         <variable name="content" type="android.databinding.ObservableField&lt;String>" />
+        <variable name="error" type="android.databinding.ObservableBoolean" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -84,7 +85,16 @@
             android:layout_centerHorizontal="true"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/progress"
-            android:visibility="@{content.get.length > 0 ? View.GONE : View.VISIBLE}" />
+            android:visibility="@{content.get.length > 0 || error.get() ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:text="Errore nel caricamento dei dati"
+            android:visibility="@{error.get() ? View.VISIBLE : View.GONE}"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
