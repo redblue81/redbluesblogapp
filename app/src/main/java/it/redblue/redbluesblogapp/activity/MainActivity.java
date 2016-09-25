@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case "contatti":
+                        if (!getComponentName().getClassName().equals(ContactsActivity.class.getCanonicalName())) {
+                            intent = new Intent(getApplicationContext(), ContactsActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
                         break;
                     default:
                         break;

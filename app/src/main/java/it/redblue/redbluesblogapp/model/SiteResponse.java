@@ -25,6 +25,8 @@ public class SiteResponse {
     private List<WPCategory> categories;
     @SerializedName("excerpt")
     private String excerpt;
+    @SerializedName("page")
+    private Page page;
 
     public int getCount() {
         return count;
@@ -80,5 +82,13 @@ public class SiteResponse {
 
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
     }
 }

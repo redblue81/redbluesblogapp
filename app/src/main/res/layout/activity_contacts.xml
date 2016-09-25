@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.databinding.ObservableBoolean" />
+        <variable name="error" type="android.databinding.ObservableBoolean" />
+        <variable name="page" type="it.redblue.redbluesblogapp.model.Page" />
+    </data>
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/coordinator">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    android:elevation="4dp"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                <!-- app:layout_scrollFlags="enterAlways|scroll" -->
+            </android.support.design.widget.AppBarLayout>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress"
+                android:visibility="@{error.get() ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:id="@+id/errorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="Errore nel caricamento dei dati"
+                android:visibility="@{error.get() ? View.VISIBLE : View.GONE}"/>
+
+                <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:layout_marginTop="15dp"
+                bind:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <WebView
+                    android:id="@+id/web_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    bind:loadData="@{page.content}"/>
+
+            </android.support.v4.widget.NestedScrollView>
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/menuNavigazione"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/drawer"/>
+
+    </android.support.v4.widget.DrawerLayout>
+</layout>

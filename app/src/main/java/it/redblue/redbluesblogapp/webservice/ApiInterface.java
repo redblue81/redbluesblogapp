@@ -32,4 +32,7 @@ public interface ApiInterface {
     @GET("redblue/get_post_excerpt")
     Call<SiteResponse> getExcerptForPost(@Query("post_id") long id);
 
+    @GET("get_page")
+    Call<SiteResponse> getPage(@Query("slug") String slug);
+
 }
