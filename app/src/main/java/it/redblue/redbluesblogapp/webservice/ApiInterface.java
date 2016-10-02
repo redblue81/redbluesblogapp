@@ -35,4 +35,7 @@ public interface ApiInterface {
     @GET("get_page")
     Call<SiteResponse> getPage(@Query("slug") String slug);
 
+    @GET("get_search_results")
+    Call<SiteResponse> getSearchResult(@Query("search") String search, @Query("page") int page);
+
 }

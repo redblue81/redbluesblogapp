@@ -1,10 +1,7 @@
 package it.redblue.redbluesblogapp.webservice;
 
-import android.util.Base64;
 import android.util.Log;
 
-import it.redblue.redbluesblogapp.model.MailResponse;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

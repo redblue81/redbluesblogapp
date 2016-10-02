@@ -1,8 +1,11 @@
 package it.redblue.redbluesblogapp.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +51,42 @@ public class ContactsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("Contacts");
         }
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        binding.menuNavigazione.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                Intent intent;
+                closeNavDrawer();
+                switch (item.getTitle().toString().toLowerCase()) {
+                    case "home":
+                        if (!getComponentName().getClassName().equals(MainActivity.class.getCanonicalName())) {
+                            intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                        break;
+                    case "categorie":
+                        if (!getComponentName().getClassName().equals(CategoriesActivity.class.getCanonicalName())) {
+                            intent = new Intent(getApplicationContext(), CategoriesActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                        break;
+                    case "contatti":
+                        if (!getComponentName().getClassName().equals(ContactsActivity.class.getCanonicalName())) {
+                            intent = new Intent(getApplicationContext(), ContactsActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+
 
         binding.sendMail.setOnClickListener((v) -> {
             if (!binding.getMail().getName().isEmpty() && !binding.getMail().getEmail().isEmpty() && !binding.getMail().getSubject().isEmpty() && !binding.getMail().getContent().isEmpty()) {
@@ -101,6 +140,16 @@ public class ContactsActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    protected boolean isNavDrawerOpen() {
+        return drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START);
+    }
+
+    protected void closeNavDrawer() {
+        if (drawerLayout != null) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
 }
