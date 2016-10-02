@@ -1,7 +1,5 @@
 package it.redblue.redbluesblogapp.model;
 
-import android.databinding.ObservableArrayList;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -25,8 +23,8 @@ public class SiteResponse {
     private List<WPCategory> categories;
     @SerializedName("excerpt")
     private String excerpt;
-    @SerializedName("page")
-    private Page page;
+ //   @SerializedName("page")
+ //   private Mail page;
 
     public int getCount() {
         return count;
@@ -83,12 +81,13 @@ public class SiteResponse {
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
-
-    public Page getPage() {
+/*
+    public Mail getPage() {
         return page;
     }
 
-    public void setPage(Page page) {
+    public void setPage(Mail page) {
         this.page = page;
     }
+*/
 }

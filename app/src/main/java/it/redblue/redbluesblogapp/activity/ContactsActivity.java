@@ -2,21 +2,24 @@ package it.redblue.redbluesblogapp.activity;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.databinding.ActivityContactsBinding;
-import it.redblue.redbluesblogapp.model.Page;
-import it.redblue.redbluesblogapp.model.SiteResponse;
-import it.redblue.redbluesblogapp.webservice.ApiClient;
-import it.redblue.redbluesblogapp.webservice.ApiInterface;
+import it.redblue.redbluesblogapp.model.Mail;
+import it.redblue.redbluesblogapp.model.MailResponse;
+import it.redblue.redbluesblogapp.webservice.MailClient;
+import it.redblue.redbluesblogapp.webservice.MailInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,15 +29,15 @@ public class ContactsActivity extends AppCompatActivity {
     private static final String TAG = ContactsActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
     private ObservableBoolean error;
-    private Page page;
+    private Mail mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityContactsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
 
-        page = new Page("", "");
-        binding.setPage(page);
+        mail = new Mail("", "", "", "");
+        binding.setMail(mail);
         error = new ObservableBoolean();
         binding.setError(error);
 
@@ -46,32 +49,42 @@ public class ContactsActivity extends AppCompatActivity {
             actionBar.setTitle("Contacts");
         }
 
-        //binding.webView.loadUrl("http://www.red-blue.it/contacts");
-
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<SiteResponse> call = apiService.getPage("contacts");
-        call.enqueue(new Callback<SiteResponse>() {
-            @Override
-            public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
-                error.set(false);
-                Page page = response.body().getPage();
-                Log.d(TAG, "Pagina " + page.getTitle() + " ricevuta correttamente");
-                binding.webView.getSettings().setJavaScriptEnabled(true);
-                if (page.getContent().length() > 0) {
-                    binding.webView.loadData(page.getContent(), "text/html", "UTF-8");
-                } else {
-                    error.set(true);
-                    binding.errorTextView.setText("Errore nel caricamento dei dati");
+        binding.sendMail.setOnClickListener((v) -> {
+            if (!binding.getMail().getName().isEmpty() && !binding.getMail().getEmail().isEmpty() && !binding.getMail().getSubject().isEmpty() && !binding.getMail().getContent().isEmpty()) {
+                boolean error = false;
+                if (!isValidEmail(binding.getMail().getEmail())) {
+                    binding.email.setError("Email non valida");
+                    error = true;
                 }
-            }
+                if (!error) {
+                    MailInterface mailService = MailClient.getClient().create(MailInterface.class);
+                    String from = "Email da RedBlue's Blog App: " + binding.getMail().getName() + "<" + binding.getMail().getEmail() + ">";
+                    String clientIdAndSecret = "api" + ":" + "key-f42f2f79ca03cb9aac98521977f1b6a0";
+                    String authorizationHeader = "Basic " + Base64.encodeToString(clientIdAndSecret.getBytes(), Base64.NO_WRAP);
+                    Call<MailResponse> call = mailService.authUser(authorizationHeader, from, "redblue@red-blue.it", binding.getMail().getSubject(), binding.getMail().getContent());
+                    call.enqueue(new Callback<MailResponse>() {
+                        @Override
+                        public void onResponse(Call<MailResponse> call, Response<MailResponse> response) {
+                            Log.d(TAG, "Email inviata correttamente");
+                            String responseMsg = response.body().getMessage();
+                            binding.getMail().setName("");
+                            binding.getMail().setEmail("");
+                            binding.getMail().setSubject("");
+                            binding.getMail().setContent("");
+                            Snackbar.make(binding.coordinator, "Email inviata correttamente. Grazie.", Snackbar.LENGTH_LONG).show();
+                        }
 
-            @Override
-            public void onFailure(Call<SiteResponse> call, Throwable t) {
-                error.set(true);
-                binding.errorTextView.setText("Errore nel caricamento dei dati");
+                        @Override
+                        public void onFailure(Call<MailResponse> call, Throwable t) {
+                            Log.e(TAG, "Errore nell'invio della mail: " + t.getMessage());
+                            Snackbar.make(binding.coordinator, t.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } else {
+                Snackbar.make(binding.coordinator, "E' necessario compilare tuttti i campi.", Snackbar.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
@@ -79,4 +92,15 @@ public class ContactsActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+    // Validazione email
+    private boolean isValidEmail(String email) {
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
 }

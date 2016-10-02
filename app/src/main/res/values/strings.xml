@@ -8,4 +8,6 @@
     <string name="subtitle">Scritto da %1$s - %2$s</string>
 
     <string name="postCount">numero di Post: %s</string>
+
+    <string name="contacts">Usa questo modulo per contattarmi direttamente per collaborazioni e/o informazioni su questo blog. Cercherò di rispondere il prima possibile.</string>
 </resources>

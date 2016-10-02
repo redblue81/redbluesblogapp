@@ -1,24 +1,12 @@
 package it.redblue.redbluesblogapp.adapter;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.provider.ContactsContract;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Html;
-import android.text.Spanned;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.io.Resources;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,7 +15,6 @@ import java.util.Date;
 
 import it.redblue.redbluesblogapp.R;
 import it.redblue.redbluesblogapp.util.RoundedTransformation;
-import it.redblue.redbluesblogapp.util.Utilities;
 
 /**
  * Created by redblue on 11/08/16.

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <import type="android.databinding.ObservableBoolean" />
         <variable name="error" type="android.databinding.ObservableBoolean" />
-        <variable name="page" type="it.redblue.redbluesblogapp.model.Page" />
+        <variable name="mail" type="it.redblue.redbluesblogapp.model.Mail" />
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -37,7 +37,7 @@
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
                 <!-- app:layout_scrollFlags="enterAlways|scroll" -->
             </android.support.design.widget.AppBarLayout>
-
+<!--
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,20 +55,79 @@
                 android:textSize="20sp"
                 android:text="Errore nel caricamento dei dati"
                 android:visibility="@{error.get() ? View.VISIBLE : View.GONE}"/>
-
-                <android.support.v4.widget.NestedScrollView
+-->
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:layout_marginTop="15dp"
                 bind:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        android:text="@string/contacts"/>
+                    <EditText
+                        android:id="@+id/fullName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:maxLines="1"
+                        android:layout_marginBottom="10dip"
+                        android:inputType="textCapWords"
+                        android:hint="Nome"
+                        android:text="@={mail.name}"/>
+                    <EditText
+                        android:id="@+id/email"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:maxLines="1"
+                        android:layout_marginBottom="10dip"
+                        android:inputType="textEmailAddress"
+                        android:hint="Email"
+                        android:text="@={mail.email}"/>
+                    <EditText
+                        android:id="@+id/subject"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="6"
+                        android:layout_marginTop="10dip"
+                        android:layout_marginBottom="10dip"
+                        android:inputType="textCapWords"
+                        android:hint="Oggetto"
+                        android:text="@={mail.subject}"/>
+                    <EditText
+                        android:id="@+id/message"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="6"
+                        android:layout_marginTop="10dip"
+                        android:layout_marginBottom="10dip"
+                        android:inputType="textCapWords"
+                        android:hint="Messaggio"
+                        android:text="@={mail.content}"/>
+                    <Button
+                        android:id="@+id/sendMail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Invia"/>
+                </LinearLayout>
+<!--
                 <WebView
                     android:id="@+id/web_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     bind:loadData="@{page.content}"/>
-
+-->
             </android.support.v4.widget.NestedScrollView>
 
         </android.support.design.widget.CoordinatorLayout>
