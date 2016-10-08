@@ -1,22 +1,23 @@
 package it.redblue.redbluesblogapp.model;
 
-import android.databinding.ObservableField;
-import android.text.Editable;
-import android.text.TextWatcher;
+import com.google.gson.annotations.Expose;
 
-import java.util.Objects;
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 /**
  * Created by redblue on 24/09/16.
  */
 
+@Parcel(Parcel.Serialization.BEAN)
 public class Mail {
 
-    private String name;
-    private String email;
-    private String subject;
-    private String content;
+    @Expose private String name;
+    @Expose private String email;
+    @Expose private String subject;
+    @Expose private String content;
 
+    @ParcelConstructor
     public Mail(String name, String email, String subject, String content) {
         this.name = name;
         this.email = email;

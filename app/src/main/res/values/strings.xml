@@ -9,5 +9,5 @@
 
     <string name="postCount">numero di Post: %s</string>
 
-    <string name="contacts">Usa questo modulo per contattarmi direttamente per collaborazioni e/o informazioni su questo blog. Cercherò di rispondere il prima possibile.</string>
+    <string name="contacts">Usa questo modulo per contattarmi direttamente. Cercherò di rispondere il prima possibile.</string>
 </resources>

@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 bind:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
@@ -109,12 +109,13 @@
                         android:id="@+id/message"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="6"
+                        android:lines="4"
                         android:layout_marginTop="10dip"
                         android:layout_marginBottom="10dip"
-                        android:inputType="textCapWords"
+                        android:inputType="textMultiLine"
                         android:hint="Messaggio"
-                        android:text="@={mail.content}"/>
+                        android:text="@={mail.content}"
+                        android:gravity="top"/>
                     <Button
                         android:id="@+id/sendMail"
                         android:layout_width="match_parent"

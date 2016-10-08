@@ -14,6 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 
+import org.parceler.Parcels;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +32,7 @@ import retrofit2.Response;
 public class ContactsActivity extends AppCompatActivity {
 
     private static final String TAG = ContactsActivity.class.getSimpleName();
+    public static final String MAIL = "MAIL";
     private DrawerLayout drawerLayout;
     private ObservableBoolean error;
     private Mail mail;
@@ -39,7 +42,11 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityContactsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
 
-        mail = new Mail("", "", "", "");
+        if (savedInstanceState == null) {
+            mail = new Mail("", "", "", "");
+        } else {
+            mail = Parcels.unwrap(savedInstanceState.getParcelable(MAIL));
+        }
         binding.setMail(mail);
         error = new ObservableBoolean();
         binding.setError(error);
@@ -150,6 +157,12 @@ public class ContactsActivity extends AppCompatActivity {
         if (drawerLayout != null) {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MAIL, Parcels.wrap(mail));
     }
 
 }
