@@ -117,6 +117,11 @@ public class ContactsActivity extends AppCompatActivity {
                             binding.getMail().setEmail("");
                             binding.getMail().setSubject("");
                             binding.getMail().setContent("");
+                            binding.fullName.setText("");
+                            binding.email.setText("");
+                            binding.subject.setText("");
+                            binding.message.setText("");
+                            binding.fullName.requestFocus();
                             Snackbar.make(binding.coordinator, "Email inviata correttamente. Grazie.", Snackbar.LENGTH_LONG).show();
                         }
 

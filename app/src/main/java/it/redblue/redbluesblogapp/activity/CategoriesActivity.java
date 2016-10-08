@@ -37,6 +37,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
 
     private ObservableBoolean loading;
+    private ObservableBoolean error;
     private ObservableArrayList<WPCategory> categories;
     private CategoriesAdapter adapter;
     private List<WPCategory> categoryList;
@@ -52,6 +53,8 @@ public class CategoriesActivity extends AppCompatActivity {
         loading = new ObservableBoolean();
         binding.setLoading(loading);
         binding.progressBarCat.bringToFront();
+        error = new ObservableBoolean();
+        binding.setError(error);
 
         setSupportActionBar(binding.toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -103,6 +106,7 @@ public class CategoriesActivity extends AppCompatActivity {
         call.enqueue(new Callback<SiteResponse>() {
             @Override
             public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                error.set(false);
                 int statusCode = response.code();
                 categoryList = response.body().getCategories();
                 categories.addAll(categoryList);
@@ -120,6 +124,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SiteResponse> call, Throwable t) {
+                error.set(true);
                 Log.e(TAG, "ERRORE NELLA RICEZIONE DELLE CATEGORIE");
             }
         });
@@ -132,6 +137,7 @@ public class CategoriesActivity extends AppCompatActivity {
                 call.enqueue(new Callback<SiteResponse>() {
                     @Override
                     public void onResponse(Call<SiteResponse> call, Response<SiteResponse> response) {
+                        error.set(false);
                         int statusCode = response.code();
                         categoryList = response.body().getCategories();
                         categories.addAll(categoryList);
@@ -148,6 +154,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<SiteResponse> call, Throwable t) {
+                        error.set(true);
                         Log.e(TAG, "ERRORE NELLA RICEZIONE DELLE CATEGORIE");
                     }
                 });

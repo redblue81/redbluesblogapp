@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<SiteResponse> call, Throwable t) {
-                        error.set(false);
+                        error.set(true);
                         binding.errorTextView.setText("Errore nel caricamento dei dati");
                         Toast.makeText(getApplicationContext(), "Errore nel caricamento dei dati dal WEB.", Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Errore primo caricamento post - " + t.toString());
